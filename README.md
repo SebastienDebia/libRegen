@@ -9,15 +9,21 @@ Include the main header which brings in everything else:
 `#include "regen/regen.hpp"`
 
 To generate a random string from a regex, just call the generate function:
+
 `std::cout << regen::generate( "a{12}" ) << "\n"`
+
 `aaaaaaaaaaaa`
 
 It is possible to customize the maximum number of repetitions for `*` and `+`:
+
 `std::cout << regen::generate( ".+", 20 ) << "\n"`
+
 `dj1ofFSkUCiJqu`
 
 It is possible to restrict the set of characters used in the generated string:
+
 `std::cout << regen::generate( ".+", 20, "[A-Z]" ) << "\n"`
+
 `LNUPLCHNHANDPR`
 
 ## Building the test binary
