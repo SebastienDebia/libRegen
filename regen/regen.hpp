@@ -29,7 +29,7 @@
 
 namespace regen
 {
-    std::string generate( const std::string& regextr,
+    inline std::string generate( const std::string& regextr,
                 std::size_t repetition_max = 5,
                 const std::string& restricted_range = "" )
     {

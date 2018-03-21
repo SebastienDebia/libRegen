@@ -56,7 +56,7 @@ namespace regen
         char data;
     };
 
-    std::string token2str( Token::EType type )
+    inline std::string token2str( Token::EType type )
     {
         if( type == Token::DOT )
             return ".";
@@ -92,7 +92,7 @@ namespace regen
         throw std::logic_error("unknown token type");
     }
 
-    Token::EType charToToken( char c )
+    inline Token::EType charToToken( char c )
     {
         if( c == '.' )
             return Token::DOT;
@@ -179,7 +179,7 @@ namespace regen
         std::size_t m_i = 0;
     };
 
-    char readHexChar( std::string str )
+    inline char readHexChar( std::string str )
     {
         str = "0" + str; // 0x..
 
@@ -201,7 +201,7 @@ namespace regen
         return res;
     }
 
-    TokenList lexer( const std::string& str )
+    inline TokenList lexer( const std::string& str )
     {
         static const std::set<char> charClassesSet = { 'w', 'd', 's', 't', 'r', 'n', 'v', 'f' };
         TokenList res;
