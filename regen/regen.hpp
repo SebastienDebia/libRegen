@@ -29,12 +29,23 @@
 
 namespace regen
 {
+    /**
+     * generates a random string matching the given regular expression
+     * 
+     * @param regex regular expression
+     * @param repetition_max max number of repetitions for + and *
+     *                       defaults to 5
+     * @param restricted_range range of characters that can be generated
+     *                         given in regex notation e.g. "[a-zA-Z]"
+     * 
+     * @return the generated string
+     */
     inline std::string generate( const std::string& regextr,
                 std::size_t repetition_max = 5,
                 const std::string& restricted_range = "" )
     {
-        auto tokens = lexer(regextr);
+        auto tokens = lexer( regextr );
         auto regex = Parser().parse( tokens );
-        return Generator(regex, repetition_max, restricted_range).generate();
+        return Generator( repetition_max, restricted_range ).generate( regex );
     }
 }

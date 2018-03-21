@@ -171,14 +171,41 @@ namespace regen
         std::vector<BasicRe> concatRes;
     };
 
+    /**
+     * Parses a list of tokens containing a regex into an AST.
+     * 
+     * The list of token must be first created with a lexer.
+     * @see regen::lexer
+     */
     class Parser
     {
     public:
+        /**
+         * parses a list of tokens containing a regex into an AST.
+         * 
+         * @param tokens list of token built with a regen::lexer
+         * 
+         * @return the AST root for the regex
+         */
         Re parse( TokenList& tokens )
         {
             return parseRe( tokens );
         }
 
+        /**
+         * parses a single set, e.g. [a-zA-Z].
+         * 
+         * <set>            ::= <positive-set> | <negative-set>
+         * <positive-set>	::= "[" <set-items> "]"
+         * <negative-set>	::= "[^" <set-items> "]"
+         * <set-items>      ::= <set-item> | <set-item> <set-items>
+         * <set-items>      ::= <range> | <char>
+         * <range>          ::= <char> "-" <char>
+         * 
+         * @param tokens list of token built with a regen::lexer
+         * 
+         * @return the AST root for the regex
+         */
         Set parseStandAloneSet( TokenList& tokens )
         {
             return Set( std::move( *parseSet( tokens ) ) );

@@ -30,14 +30,32 @@
 
 namespace regen
 {
+    /**
+     * Generates a random string matching the given regular expression
+     * 
+     * Some parameters of the generator can be configured:
+     * - maximum number of repetitions for + and * (default to 5)
+     * - range of characters that can be generated
+     *   given in regex notation e.g. "[a-zA-Z]"
+     * 
+     * The generation takes in a Re object which is created using a parser.
+     * @see regen::Parser
+     */
     class Generator
     {
     public:
-        Generator( const Re& re, 
-            std::size_t repetition_max = 5,
+
+        /**
+         * generates a random string matching the given regular expression
+         * 
+         * @param repetition_max max number of repetitions for + and *
+         *                       defaults to 5
+         * @param restricted_range range of characters that can be generated
+         *                         given in regex notation e.g. "[a-zA-Z]"
+         */
+        Generator( std::size_t repetition_max = 5,
             const std::string& restricted_range = "" )
-        : m_re(re),
-        m_rng(std::time(0)),
+        : m_rng(std::time(0)),
         m_repetition_max( repetition_max ),
         m_fullSetRegex( "[\\w:!\\?\\-\\+=]" )
         {
@@ -57,12 +75,13 @@ namespace regen
             }
         }
 
-        std::string generate() const
-        {
-            return generate( m_re );
-        }
-
-    private:
+        /**
+         * generates a random string matching the given regular expression
+         * 
+         * @param re regular expression ast (@see regen::Parser to create it)
+         * 
+         * @return the generated string
+         */
         std::string generate( const Re& re ) const
         {
             boost::random::uniform_int_distribution<> union_dice(0,re.unionRes.size()-1);
@@ -70,6 +89,7 @@ namespace regen
             return generate( re.unionRes[union_dice(m_rng)] );
         }
 
+    private:
         std::string generate( const SimpleRe& sre ) const
         {
             std::string res;
@@ -236,20 +256,25 @@ namespace regen
 
 
     private:
-        const Re& m_re;
+        /** random number generator */
         mutable boost::random::mt19937 m_rng;
 
-        // this set is used with [^...] the negative set items are substracted from this one
-        // the purpose is to avoid always generating junk out of this construct
-        std::string m_fullSet;
-
-        // max number of repetitions for + and *
+        /** max number of repetitions for * and + */
         std::size_t m_repetition_max;
 
-        // this set is used to restric the pool of characters to pick from, as the user might not 
-        // want to generate too "garbage" looking strings
-        std::string m_restrictedSet;
+        /**
+         * this set is used with [^...] the negative set items are substracted from this one
+         * the purpose is to avoid always generating junk out of this construct
+         */
+        std::string m_fullSet;
 
+        /** string used to generate m_fullSet */
         const std::string m_fullSetRegex;
+
+        /**
+         * this set is used to restric the pool of characters to pick from, as the user might not 
+         * want to generate too "garbage" looking strings
+         */
+        std::string m_restrictedSet;
     };
 }

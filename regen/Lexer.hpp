@@ -23,6 +23,7 @@
 */
 
 #pragma once
+
 #include <string>
 #include <vector>
 #include <set>
@@ -126,6 +127,11 @@ namespace regen
         throw std::runtime_error("unknown token '" + std::string(1, c) + "'");
     }
 
+    /**
+     * List of tokens
+     * 
+     * provides functions to read tokens sequentially and peak at comming tokens.
+     */
     class TokenList
     {
     public:
@@ -201,6 +207,14 @@ namespace regen
         return res;
     }
 
+    /**
+     * reads a string containing a regular expression
+     * and creates a token list that can be used with the parser
+     * 
+     * @param str string to read
+     * 
+     * @return list of tokens in the string
+     */
     inline TokenList lexer( const std::string& str )
     {
         static const std::set<char> charClassesSet = { 'w', 'd', 's', 't', 'r', 'n', 'v', 'f' };
