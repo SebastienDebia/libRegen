@@ -38,6 +38,9 @@ namespace regen
      * @param restricted_range range of characters that can be generated
      *                         given in regex notation e.g. "[a-zA-Z]"
      * 
+     * @throw std::runtime_error error processing the regex (i.e. invalid regex)
+     * @throw std::logic_error probably a problem with the code :)
+     * 
      * @return the generated string
      */
     inline std::string generate( const std::string& regextr,
