@@ -33,10 +33,7 @@ namespace regen
      * generates a random string matching the given regular expression
      * 
      * @param regex regular expression
-     * @param repetition_max max number of repetitions for + and *
-     *                       defaults to 5
-     * @param restricted_range range of characters that can be generated
-     *                         given in regex notation e.g. "[a-zA-Z]"
+     * @param generator Generator used to generate the string. @see Generator for default parameters
      * 
      * @throw std::runtime_error error processing the regex (i.e. invalid regex)
      * @throw std::logic_error probably a problem with the code :)
@@ -44,11 +41,10 @@ namespace regen
      * @return the generated string
      */
     inline std::string generate( const std::string& regextr,
-                std::size_t repetition_max = 5,
-                const std::string& restricted_range = "" )
+                Generator generator = Generator() )
     {
         auto tokens = lexer( regextr );
         auto regex = Parser().parse( tokens );
-        return Generator( repetition_max, restricted_range ).generate( regex );
+        return generator.generate( regex );
     }
 }
