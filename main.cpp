@@ -39,7 +39,7 @@ void test( const std::string& regex,
 
     try
     {
-        std::cout << regen::generate(regex, repetition_max, restricted_range) << "\n";
+        std::cout << regen::generate( regex, regen::Generator( repetition_max, restricted_range ) ) << "\n";
     }
     catch( std::runtime_error& ex )
     {
