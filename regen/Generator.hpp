@@ -29,6 +29,7 @@
 
 #include <ctime>
 #include <algorithm>
+#include <chrono>
 
 namespace regen
 {
@@ -62,7 +63,7 @@ namespace regen
         Generator( std::size_t repetition_max = 5,
             std::size_t repetition_min = 0,
             const std::string& restricted_range = "" )
-        : m_rng(std::time(0)),
+        : m_rng( std::chrono::high_resolution_clock::now().time_since_epoch().count() ),
         m_repetition_max( repetition_max ),
         m_repetition_min( repetition_min ),
         m_fullSetRegex( "[\\w:!\\?\\-\\+=]" )
