@@ -25,21 +25,25 @@
 #include "regen/regen.hpp"
 
 static const std::size_t s_default_rep_max = 5;
+static const std::size_t s_default_rep_min = 0;
 
 void test( const std::string& regex,
             std::size_t repetition_max = s_default_rep_max,
+            std::size_t repetition_min = s_default_rep_min,
             const std::string& restricted_range = "" )
 {
     std::cout << regex;
     if( repetition_max != s_default_rep_max )
         std::cout << " {max rep: " << repetition_max << "}";
+    if( repetition_min != s_default_rep_min )
+        std::cout << " {min rep: " << repetition_min << "}";
     if( !restricted_range.empty() )
         std::cout << " {restricted range: " << restricted_range << "}";
     std::cout << "\n";
 
     try
     {
-        std::cout << regen::generate( regex, regen::Generator( repetition_max, restricted_range ) ) << "\n";
+        std::cout << regen::generate( regex, regen::Generator( repetition_max, repetition_min, restricted_range ) ) << "\n";
     }
     catch( std::runtime_error& ex )
     {
@@ -68,7 +72,8 @@ int main( void )
 
     test( R"(.+)" );
     test( R"(.+)", 20 );
-    test( R"(.+)", 20, R"([A-Z])" );
+    test( R"(.+)", 20, 0, R"([A-Z])" );
+    test( R"(.+)", 42, 21, R"([A-Z])" );
 
     return 0;
 }

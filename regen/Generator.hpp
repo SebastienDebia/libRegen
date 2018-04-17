@@ -26,7 +26,9 @@
 
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/uniform_int_distribution.hpp>
+
 #include <ctime>
+#include <algorithm>
 
 namespace regen
 {
@@ -35,6 +37,7 @@ namespace regen
      * 
      * Some parameters of the generator can be configured:
      * - maximum number of repetitions for + and * (default to 5)
+     * - minimum number of repetitions for + and * (default to 0, + will always be at least 1)
      * - range of characters that can be generated
      *   given in regex notation e.g. "[a-zA-Z]"
      * 
@@ -50,15 +53,25 @@ namespace regen
          * 
          * @param repetition_max max number of repetitions for + and *
          *                       defaults to 5
+         * @param repetition_min min number of repetitions for + and *
+         *                       defaults to 0.
+         *                       + will still be at least 1 repetition.
          * @param restricted_range range of characters that can be generated
          *                         given in regex notation e.g. "[a-zA-Z]"
          */
         Generator( std::size_t repetition_max = 5,
+            std::size_t repetition_min = 0,
             const std::string& restricted_range = "" )
         : m_rng(std::time(0)),
         m_repetition_max( repetition_max ),
+        m_repetition_min( repetition_min ),
         m_fullSetRegex( "[\\w:!\\?\\-\\+=]" )
         {
+            if( repetition_min > repetition_max )
+                throw std::logic_error( "minimum repetitions cannot be greater than maximum repetitions" );
+            if( repetition_max < 1 )
+                repetition_max = 1;
+            
             {
                 auto tokens = lexer( m_fullSetRegex );
                 auto fullSet = Parser().parseStandAloneSet( tokens );
@@ -134,12 +147,13 @@ namespace regen
 
         std::string generate( const Star& star ) const
         {
-            return generateRepetition( *star.re, 0, m_repetition_max );
+            return generateRepetition( *star.re, m_repetition_min, m_repetition_max );
         }
 
         std::string generate( const Plus& plus ) const
         {
-            return generateRepetition( *plus.re, 1, m_repetition_max );
+            const auto rep_min = std::max<std::size_t>( m_repetition_min, 1 );
+            return generateRepetition( *plus.re, rep_min, m_repetition_max );
         }
 
         std::string generate( const Question& question ) const
@@ -261,6 +275,9 @@ namespace regen
 
         /** max number of repetitions for * and + */
         std::size_t m_repetition_max;
+
+        /** min number of repetitions for * and + */
+        std::size_t m_repetition_min;
 
         /**
          * this set is used with [^...] the negative set items are substracted from this one
