@@ -20,9 +20,15 @@ It is possible to customize the maximum number of repetitions for `*` and `+`:
 
 `dj1ofFSkUCiJqu`
 
-It is possible to restrict the set of characters used in the generated string:
+It is also possible to customize the minimum number of repetitions for `*` and `+`, note that `+` will still have at least 1 repetition:
 
-`std::cout << regen::generate( ".+", 20, "[A-Z]" ) << "\n"`
+`std::cout << regen::generate( ".+", 42, 21 ) << "\n"`
+
+`vA=N796t?hXwAJdTNQ!HE1_OLXmJ`
+
+Finally, it is possible to restrict the set of characters used in the generated string:
+
+`std::cout << regen::generate( ".+", 20, 0, "[A-Z]" ) << "\n"`
 
 `LNUPLCHNHANDPR`
 
